@@ -7,12 +7,14 @@ namespace blaxpro.Automap.Tests
     {
         public class First
         {
+            public static string SomeStaticStringProperty { get; set; }
             public int IntProperty { get; set; }
             public string StringProperty { get; set; }
         }
 
         public class Second
         {
+            public static decimal? SomeStaticDoubleNullableProperty { get; set; }
             public int Intproperty { get; set; }
             public string StringProperty { get; set; }
             public string Stringproperty { get; set; }
