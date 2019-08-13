@@ -12,6 +12,12 @@ namespace blaxpro.Automap.Exceptions
             this.TargetType = targetType ?? throw new ArgumentNullException(nameof(targetType));
         }
 
+        public MappingException(Type sourceType, Type targetType, string message, Exception innerException) : base(message, innerException)
+        {
+            this.SourceType = sourceType ?? throw new ArgumentNullException(nameof(sourceType));
+            this.TargetType = targetType ?? throw new ArgumentNullException(nameof(targetType));
+        }
+
         protected MappingException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
