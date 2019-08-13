@@ -39,7 +39,7 @@ namespace blaxpro.Automap.Services
 
                 sourceProperty = source.Value;
 
-                if (prv_match(sourceType, source.Value, targetType, targetProperties, out targetProperty))
+                if (prv_match(source.Value, targetProperties, out targetProperty))
                 {
                     yield return new PropertyMap
                     {
@@ -47,7 +47,7 @@ namespace blaxpro.Automap.Services
                         TargetProperty = targetProperty,
                     };
                 }
-                else if (prv_ignoreCaseMatch(sourceType, source.Value, targetType, targetProperties, out targetProperty))
+                else if (prv_ignoreCaseMatch(source.Value, targetProperties, out targetProperty))
                 {
                     yield return new PropertyMap
                     {
@@ -65,17 +65,21 @@ namespace blaxpro.Automap.Services
                 throw new MappingException(sourceType, targetType, $"Some target properties not assigned '{targetType.FullName}'.");
         }
 
-        private static bool prv_match(Type sourceType, PropertyInfo sourceProperty, Type targetType, IDictionary<string, PropertyInfo> targetProperties, out PropertyInfo targetProperty)
+        private static bool prv_match(PropertyInfo sourceProperty, IDictionary<string, PropertyInfo> targetProperties, out PropertyInfo targetProperty)
         {
             if (targetProperties.ContainsKey(sourceProperty.Name))
             {
-                targetProperty = targetProperties[sourceProperty.Name];
+                Type sourceType, targetType;
 
-                if (targetProperty.PropertyType != sourceProperty.PropertyType)
-                    throw new MappingException(sourceType, targetType, $@"Type missmatch between properties:
-- Source: {sourceType.FullName}.{sourceProperty.Name} ({sourceProperty.PropertyType.FullName})
-- Target: {targetType.FullName}.{targetProperty.Name} ({targetProperty.PropertyType.FullName})
-");
+                sourceType = sourceProperty.DeclaringType;
+                targetProperty = targetProperties[sourceProperty.Name];
+                targetType = targetProperty.DeclaringType;
+
+//                if (targetProperty.PropertyType.IsAssignableFrom(sourceProperty.PropertyType) == false)
+//                    throw new MappingException(sourceType, targetType, $@"Type missmatch between properties:
+//- Source: {sourceType.FullName}.{sourceProperty.Name} ({sourceProperty.PropertyType.FullName})
+//- Target: {targetType.FullName}.{targetProperty.Name} ({targetProperty.PropertyType.FullName})
+//");
 
                 targetProperties.Remove(sourceProperty.Name);
                 return true;
@@ -87,24 +91,25 @@ namespace blaxpro.Automap.Services
             }
         }
 
-        private static bool prv_ignoreCaseMatch(Type sourceType, PropertyInfo sourceProperty, Type targetType, IDictionary<string, PropertyInfo> targetProperties, out PropertyInfo targetProperty)
+        private static bool prv_ignoreCaseMatch(PropertyInfo sourceProperty, IDictionary<string, PropertyInfo> targetProperties, out PropertyInfo targetProperty)
         {
-            string targetPropertyName;
             int matches;
             StringComparer stringComparer;
+            Type sourceType;
 
+            sourceType = sourceProperty.DeclaringType;
             stringComparer = StringComparer.InvariantCultureIgnoreCase;
             matches = 0;
-            targetPropertyName = targetProperties
-                .Keys
-                .Where(propertyName =>
+            targetProperty = targetProperties
+                .Values
+                .Where(property =>
                 {
-                    if (stringComparer.Compare(sourceProperty.Name, propertyName) == 0)
+                    if (stringComparer.Compare(sourceProperty.Name, property.Name) == 0)
                     {
                         matches++;
 
                         if (matches > 1)
-                            throw new MappingException(sourceType, targetType, $"Multiple matches for '{sourceProperty.Name}' property.");
+                            throw new MappingException(sourceType, property.DeclaringType, $"Multiple matches for '{sourceProperty.Name}' property.");
 
                         return true;
                     }
@@ -113,22 +118,23 @@ namespace blaxpro.Automap.Services
                 })
                 .FirstOrDefault();
 
-            if (targetPropertyName != null)
+            if (targetProperty != null)
             {
-                targetProperty = targetProperties[targetPropertyName];
+//                if (targetProperty.PropertyType.IsAssignableFrom(sourceProperty.PropertyType) == false)
+//                {
+//                    Type targetType = targetProperty.DeclaringType;
 
-                if (targetProperty.PropertyType != sourceProperty.PropertyType)
-                    throw new MappingException(sourceType, targetType, $@"Type missmatch between properties:
-- Source: {sourceType.FullName}.{sourceProperty.Name} ({sourceProperty.PropertyType.FullName})
-- Target: {targetType.FullName}.{targetProperty.Name} ({targetProperty.PropertyType.FullName})
-");
+//                    throw new MappingException(sourceType, targetType, $@"Type missmatch between properties:
+//- Source: {sourceType.FullName}.{sourceProperty.Name} ({sourceProperty.PropertyType.FullName})
+//- Target: {targetType.FullName}.{targetProperty.Name} ({targetProperty.PropertyType.FullName})
+//");
+//                }
 
-                targetProperties.Remove(targetPropertyName);
+                targetProperties.Remove(targetProperty.Name);
                 return true;
             }
             else
             {
-                targetProperty = null;
                 return false;
             }
         }
