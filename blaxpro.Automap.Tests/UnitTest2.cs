@@ -1,26 +1,21 @@
-using System;
-using blaxpro.Automap.Exceptions;
 using blaxpro.Automap.Extensions;
 using Xunit;
 
 namespace blaxpro.Automap.Tests
 {
-    public class UnitTest1
+    public class UnitTest2
     {
         public class First
         {
-            public static string SomeStaticStringProperty { get; set; }
             public int IntProperty { get; set; }
             public string StringProperty { get; set; }
         }
 
         public class Second
         {
-            public static decimal? SomeStaticDoubleNullableProperty { get; set; }
+            public static string SomeStaticStringProperty { get; set; }
             public int Intproperty { get; set; }
-            public string StringProperty { get; set; }
             public string Stringproperty { get; set; }
-            public decimal? DoubleNullableProperty { get; set; }
         }
 
         [Fact(DisplayName = "Map to new instance")]
@@ -35,7 +30,10 @@ namespace blaxpro.Automap.Tests
                 StringProperty = "Some string",
             };
 
-            Assert.Throws<MappingException>(() => second = first.mapTo<Second>());
+            second = first.mapTo<Second>();
+
+            Assert.Equal(34, second.Intproperty);
+            Assert.Equal("Some string", second.Stringproperty);
         }
 
         [Fact(DisplayName = "Map to existing instance")]
@@ -53,13 +51,13 @@ namespace blaxpro.Automap.Tests
             second = new Second
             {
                 Intproperty = 666,
-                StringProperty = "aaa",
-                Stringproperty = "untouched",
-                DoubleNullableProperty = 3.1415m
+                Stringproperty = "aaa",
             };
 
-            Assert.Throws<MappingException>(() => first.mapTo(second));
+            first.mapTo(second);
 
+            Assert.Equal(34, second.Intproperty);
+            Assert.Equal("Some string", second.Stringproperty);
         }
     }
 }
