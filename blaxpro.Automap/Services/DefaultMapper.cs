@@ -12,8 +12,16 @@ namespace blaxpro.Automap.Services
     {
         public IMap getMap(Type sourceType, Type targetType)
         {
+            IEnumerable<PropertyMap> propertyMaps;
+
+            propertyMaps = prv_getPropertyMaps(sourceType, targetType);
+
+            return new PrvMap(propertyMaps);
+        }
+
+        private static IEnumerable<PropertyMap> prv_getPropertyMaps(Type sourceType, Type targetType)
+        {
             IDictionary<string, PropertyInfo> targetProperties, sourceProperties;
-            IList<PropertyMap> propertyMaps;
 
             sourceProperties = sourceType
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
@@ -25,8 +33,6 @@ namespace blaxpro.Automap.Services
                 .Where(p => p.CanRead && p.CanWrite)
                 .ToDictionary(property => property.Name);
 
-            propertyMaps = new List<PropertyMap>();
-
             foreach (var source in sourceProperties)
             {
                 PropertyInfo sourceProperty, targetProperty;
@@ -35,19 +41,19 @@ namespace blaxpro.Automap.Services
 
                 if (prv_match(sourceType, source.Value, targetType, targetProperties, out targetProperty))
                 {
-                    propertyMaps.Add(new PropertyMap
+                    yield return new PropertyMap
                     {
                         SourceProperty = sourceProperty,
                         TargetProperty = targetProperty,
-                    });
+                    };
                 }
                 else if (prv_ignoreCaseMatch(sourceType, source.Value, targetType, targetProperties, out targetProperty))
                 {
-                    propertyMaps.Add(new PropertyMap
+                    yield return new PropertyMap
                     {
                         SourceProperty = sourceProperty,
                         TargetProperty = targetProperty,
-                    });
+                    };
                 }
                 else
                 {
@@ -55,10 +61,8 @@ namespace blaxpro.Automap.Services
                 }
             }
 
-            if(targetProperties.Any())
+            if (targetProperties.Any())
                 throw new MappingException(sourceType, targetType, $"Some target properties not assigned '{targetType.FullName}'.");
-
-            return new PrvMap(propertyMaps);
         }
 
         private static bool prv_match(Type sourceType, PropertyInfo sourceProperty, Type targetType, IDictionary<string, PropertyInfo> targetProperties, out PropertyInfo targetProperty)
