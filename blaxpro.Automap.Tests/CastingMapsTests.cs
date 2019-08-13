@@ -15,8 +15,13 @@ namespace blaxpro.Automap.Tests
             public double Count { get; set; }
         }
 
+        public class BoolTarget
+        {
+            public bool Count { get; set; }
+        }
+
         [Fact(DisplayName = "Map from int to double")]
-        public void Map_from_int_to_double()
+        public void map_from_int_to_double()
         {
             Source source;
             Target target;
@@ -29,6 +34,22 @@ namespace blaxpro.Automap.Tests
             target = source.mapTo<Target>();
 
             Assert.Equal(34.0, target.Count);
+        }
+
+        [Fact(DisplayName = "Map from int to double")]
+        public void map_from_int_to_bool()
+        {
+            Source source;
+            BoolTarget target;
+
+            source = new Source
+            {
+                count = 34,
+            };
+
+            target = source.mapTo<BoolTarget>();
+
+            Assert.True(target.Count);
         }
     }
 }
