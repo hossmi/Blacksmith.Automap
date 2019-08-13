@@ -26,6 +26,11 @@ namespace blaxpro.Automap.Extensions
             }
         }
 
+        public static void setAsDefault(this IMapper mapper)
+        {
+            Mapper = mapper;
+        }
+
         public static T mapTo<T>(this object item) where T : class, new()
         {
             return (T)prv_mapTo(item, new T(), currentMapper);
@@ -34,6 +39,16 @@ namespace blaxpro.Automap.Extensions
         public static T mapTo<T>(this object item, T targetItem) where T : class
         {
             return (T)prv_mapTo(item, targetItem, currentMapper);
+        }
+
+        public static T mapTo<T>(this object item, IMapper mapper) where T : class, new()
+        {
+            return (T)prv_mapTo(item, new T(), mapper);
+        }
+
+        public static T mapTo<T>(this object item, T targetItem, IMapper mapper) where T : class
+        {
+            return (T)prv_mapTo(item, targetItem, mapper);
         }
 
         private static object prv_mapTo(object item, object target, IMapper mapper)
