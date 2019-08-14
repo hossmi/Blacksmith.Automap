@@ -23,7 +23,7 @@ namespace blaxpro.Automap.Tests
             public ChildTarget child { get; set; }
         }
 
-        public class ChildTarget
+        public struct ChildTarget
         {
             public long Someproperty { get; set; }
         }

@@ -10,109 +10,50 @@ namespace blaxpro.Automap.Extensions
 {
     public static class AutomapExtensions
     {
+        private static IMapRepository currentMapRepository;
         private static IMapper currentMapper;
 
         static AutomapExtensions()
         {
-            currentMapper = new DefaultMapper();
-        }
-
-        public static IMapper Mapper
-        {
-            get => currentMapper;
-            set
-            {
-                currentMapper = value ?? throw new ArgumentNullException(nameof(Mapper));
-            }
+            currentMapRepository = new StoragelessMapRepository();
+            currentMapper = new RecursiveMapper(currentMapRepository);
         }
 
         public static void setAsDefault(this IMapper mapper)
         {
-            Mapper = mapper;
+            currentMapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public static T mapTo<T>(this object item) where T : class, new()
+        public static void setAsDefault(this IMapRepository mapRepository)
         {
-            return (T)prv_mapTo(item, new T(), currentMapper);
+            currentMapRepository = mapRepository ?? throw new ArgumentNullException(nameof(mapRepository));
         }
 
-        public static T mapTo<T>(this object item, T targetItem) where T : class
+        public static T mapTo<T>(this object item) where T : new()
         {
-            return (T)prv_mapTo(item, targetItem, currentMapper);
+            return prv_map<T>(currentMapper, item, new T());
         }
 
-        public static T mapTo<T>(this object item, IMapper mapper) where T : class, new()
+        public static T mapTo<T>(this object item, T targetItem) 
         {
-            return (T)prv_mapTo(item, new T(), mapper);
+            return prv_map<T>(currentMapper, item, targetItem);
         }
 
-        public static T mapTo<T>(this object item, T targetItem, IMapper mapper) where T : class
+        public static T mapTo<T>(this object item, IMapper mapper) where T : new()
         {
-            return (T)prv_mapTo(item, targetItem, mapper);
+            return prv_map<T>(mapper, item, new T());
         }
 
-        private static object prv_mapTo(object item, object target, IMapper mapper)
+        public static T mapTo<T>(this object item, T targetItem, IMapper mapper) 
         {
-            IMap map;
-            Type sourceType, targetType;
+            return prv_map<T>(mapper, item, targetItem);
+        }
 
-            sourceType = item.GetType();
-            targetType = target.GetType();
-            map = mapper.getMap(sourceType, targetType);
-
-            foreach (PropertyMap propertyMap in map)
-            {
-                object value;
-                bool needsRecursiveMap;
-
-                value = propertyMap.SourceProperty.GetValue(item);
-                needsRecursiveMap = prv_needsRecursiveMap(propertyMap);
-
-                if (needsRecursiveMap)
-                {
-                    object childTarget;
-
-                    childTarget = Activator.CreateInstance(propertyMap.TargetProperty.PropertyType);
-                    prv_mapTo(value, childTarget, mapper);
-                    propertyMap.TargetProperty.SetValue(target, childTarget);
-                }
-                else
-                {
-                    try
-                    {
-                        propertyMap.TargetProperty.SetValue(target, value);
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        throw new MappingException(sourceType, targetType, "Error assigning property value", ex);
-                    }
-                }
-            }
-
+        private static T prv_map<T>(IMapper mapper, object source, T target)
+        {
+            mapper.map(source, target);
             return target;
         }
 
-        private static bool prv_needsRecursiveMap(PropertyMap propertyMap)
-        {
-            bool sourceIsNoStringClass, targetIsNoStringClass, sourceIsCustomStruct, targetIsCustomStruct;
-
-            sourceIsNoStringClass = prv_isNoStringClass(propertyMap.SourceProperty.PropertyType);
-            targetIsNoStringClass = prv_isNoStringClass(propertyMap.TargetProperty.PropertyType);
-            sourceIsCustomStruct = prv_isCustomStruct(propertyMap.SourceProperty.PropertyType);
-            targetIsCustomStruct = prv_isCustomStruct(propertyMap.TargetProperty.PropertyType);
-
-            return sourceIsCustomStruct && targetIsCustomStruct
-                || sourceIsNoStringClass && targetIsNoStringClass;
-        }
-
-        private static bool prv_isNoStringClass(Type type)
-        {
-            return type.IsClass && type != typeof(string);
-        }
-
-        private static bool prv_isCustomStruct(Type type)
-        {
-            return type.IsValueType && !type.IsEnum && !type.IsPrimitive;
-        }
     }
 }
