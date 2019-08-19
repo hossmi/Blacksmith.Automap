@@ -49,7 +49,37 @@ namespace blaxpro.Automap.Extensions
             return prv_map<T>(mapper, item, targetItem);
         }
 
+        public static IEnumerable<T> map<T>(this IEnumerable<object> items) where T : new()
+        {
+            foreach (object item in items)
+                yield return prv_map<T>(currentMapper, item, new T());
+        }
+
+        public static IEnumerable<T> map<S, T>(this IEnumerable<S> items, Func<S, T> newInstanceDelegate) 
+        {
+            foreach (S item in items)
+                yield return prv_map(currentMapper, item, newInstanceDelegate(item));
+        }
+
+        public static IEnumerable<T> map<T>(this IEnumerable<object> items, IMapper mapper) where T : new()
+        {
+            foreach (object item in items)
+                yield return prv_map<T>(mapper, item, new T());
+        }
+
+        public static IEnumerable<T> map<S, T>(this IEnumerable<S> items, Func<S, T> newInstanceDelegate, IMapper mapper) where T : new()
+        {
+            foreach (S item in items)
+                yield return prv_map(mapper, item, newInstanceDelegate(item));
+        }
+
         private static T prv_map<T>(IMapper mapper, object source, T target)
+        {
+            mapper.map(source, target);
+            return target;
+        }
+
+        private static T prv_map<S,T>(IMapper mapper, S source, T target)
         {
             mapper.map(source, target);
             return target;
