@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using blaxpro.Automap.Exceptions;
-using blaxpro.Automap.Models;
+using Blaxpro.Automap.Exceptions;
+using Blaxpro.Automap.Models;
 
-namespace blaxpro.Automap.Services
+namespace Blaxpro.Automap.Services
 {
     public class StoragelessMapRepository : IMapRepository
     {

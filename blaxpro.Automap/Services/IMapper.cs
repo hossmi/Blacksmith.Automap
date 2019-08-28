@@ -1,4 +1,4 @@
-﻿namespace blaxpro.Automap.Services
+﻿namespace Blaxpro.Automap.Services
 {
     public interface IMapper
     {

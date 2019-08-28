@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace blaxpro.Automap.Models
+namespace Blaxpro.Automap.Models
 {
     public class Map : IMap
     {

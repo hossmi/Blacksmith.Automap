@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using blaxpro.Automap.Exceptions;
-using blaxpro.Automap.Models;
-using blaxpro.Automap.Services;
+using Blaxpro.Automap.Exceptions;
+using Blaxpro.Automap.Models;
+using Blaxpro.Automap.Services;
 
-namespace blaxpro.Automap.Extensions
+namespace Blaxpro.Automap.Extensions
 {
     public static class AutomapExtensions
     {

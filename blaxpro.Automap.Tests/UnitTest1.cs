@@ -1,9 +1,9 @@
 using System;
-using blaxpro.Automap.Exceptions;
-using blaxpro.Automap.Extensions;
+using Blaxpro.Automap.Exceptions;
+using Blaxpro.Automap.Extensions;
 using Xunit;
 
-namespace blaxpro.Automap.Tests
+namespace Blaxpro.Automap.Tests
 {
     public class UnitTest1
     {

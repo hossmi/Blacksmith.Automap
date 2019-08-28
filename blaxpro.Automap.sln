@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.757
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "blaxpro.Automap", "blaxpro.Automap\blaxpro.Automap.csproj", "{D2FCE01C-997E-4AD9-915E-71771C0CB8C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blaxpro.Automap", "blaxpro.Automap\Blaxpro.Automap.csproj", "{D2FCE01C-997E-4AD9-915E-71771C0CB8C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "blaxpro.Automap.Tests", "blaxpro.Automap.Tests\blaxpro.Automap.Tests.csproj", "{3D78E41F-BAE1-4987-8CE5-5B996E3B0526}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blaxpro.Automap.Tests", "blaxpro.Automap.Tests\Blaxpro.Automap.Tests.csproj", "{3D78E41F-BAE1-4987-8CE5-5B996E3B0526}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
