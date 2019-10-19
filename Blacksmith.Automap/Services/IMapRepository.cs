@@ -1,7 +1,7 @@
 ﻿using System;
-using Blaxpro.Automap.Models;
+using Blacksmith.Automap.Models;
 
-namespace Blaxpro.Automap.Services
+namespace Blacksmith.Automap.Services
 {
     public interface IMapRepository
     {

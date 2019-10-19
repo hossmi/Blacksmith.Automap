@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Blaxpro.Automap.Models
+namespace Blacksmith.Automap.Models
 {
     public interface IMap : IReadOnlyList<PropertyMap>
     {

@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Blaxpro.Automap.Models
+namespace Blacksmith.Automap.Models
 {
     public class PropertyMap
     {

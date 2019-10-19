@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Blaxpro.Automap.Exceptions
+namespace Blacksmith.Automap.Exceptions
 {
     [Serializable]
     public class MappingException : Exception
