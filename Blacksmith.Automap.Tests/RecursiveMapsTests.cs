@@ -1,8 +1,7 @@
-using Blaxpro.Automap.Exceptions;
-using Blaxpro.Automap.Extensions;
+using Blacksmith.Automap.Extensions;
 using Xunit;
 
-namespace Blaxpro.Automap.Tests
+namespace Blacksmith.Automap.Tests
 {
     public class RecursiveMapsTests
     {

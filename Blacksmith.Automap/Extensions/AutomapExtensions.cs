@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Blaxpro.Automap.Exceptions;
-using Blaxpro.Automap.Models;
-using Blaxpro.Automap.Services;
+using Blacksmith.Automap.Services;
 
-namespace Blaxpro.Automap.Extensions
+namespace Blacksmith.Automap.Extensions
 {
     public static class AutomapExtensions
     {

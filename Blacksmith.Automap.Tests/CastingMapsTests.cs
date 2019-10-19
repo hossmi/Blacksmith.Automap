@@ -1,8 +1,8 @@
-using Blaxpro.Automap.Exceptions;
-using Blaxpro.Automap.Extensions;
+using Blacksmith.Automap.Exceptions;
+using Blacksmith.Automap.Extensions;
 using Xunit;
 
-namespace Blaxpro.Automap.Tests
+namespace Blacksmith.Automap.Tests
 {
     public class CastingMapsTests
     {
@@ -21,8 +21,8 @@ namespace Blaxpro.Automap.Tests
             public bool Count { get; set; }
         }
 
-        [Fact(DisplayName = "Map from int to double")]
-        public void map_from_int_to_double()
+        [Fact]
+        public void map_from_int_to_double_works()
         {
             Source source;
             Target target;
@@ -37,8 +37,8 @@ namespace Blaxpro.Automap.Tests
             Assert.Equal(34.0, target.Count);
         }
 
-        [Fact(DisplayName = "Map from int to bool")]
-        public void map_from_int_to_bool()
+        [Fact]
+        public void map_from_int_to_bool_fails()
         {
             Source source;
             BoolTarget target;

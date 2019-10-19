@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Blaxpro.Automap.Extensions;
+using Blacksmith.Automap.Extensions;
 using Xunit;
 
-namespace Blaxpro.Automap.Tests
+namespace Blacksmith.Automap.Tests
 {
     public class EnumerableMapsTests
     {

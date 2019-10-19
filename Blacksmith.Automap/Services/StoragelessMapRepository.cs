@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Blaxpro.Automap.Exceptions;
-using Blaxpro.Automap.Models;
+using Blacksmith.Automap.Exceptions;
+using Blacksmith.Automap.Models;
 
-namespace Blaxpro.Automap.Services
+namespace Blacksmith.Automap.Services
 {
     public class StoragelessMapRepository : IMapRepository
     {
@@ -61,7 +61,7 @@ namespace Blaxpro.Automap.Services
             }
 
             if (targetProperties.Any())
-                throw new MappingException(sourceType, targetType, $"Some target properties not assigned '{targetType.FullName}'.");
+                throw new MappingException(sourceType, targetType, $"Some target properties of '{targetType.FullName}' could not be assigned.");
         }
 
         private static bool prv_match(PropertyInfo sourceProperty, IDictionary<string, PropertyInfo> targetProperties, out PropertyInfo targetProperty)

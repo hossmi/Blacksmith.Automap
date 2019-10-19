@@ -1,11 +1,10 @@
-using System;
-using Blaxpro.Automap.Exceptions;
-using Blaxpro.Automap.Extensions;
+using Blacksmith.Automap.Exceptions;
+using Blacksmith.Automap.Extensions;
 using Xunit;
 
-namespace Blaxpro.Automap.Tests
+namespace Blacksmith.Automap.Tests
 {
-    public class UnitTest1
+    public class MissingTargetPropertiesTests
     {
         public class First
         {
@@ -23,8 +22,8 @@ namespace Blaxpro.Automap.Tests
             public decimal? DoubleNullableProperty { get; set; }
         }
 
-        [Fact(DisplayName = "Map to new instance")]
-        public void map_to_new_instance()
+        [Fact]
+        public void map_fails_to_new_instance_because_of_missing_target_properties()
         {
             First first;
             Second second;
@@ -38,8 +37,8 @@ namespace Blaxpro.Automap.Tests
             Assert.Throws<MappingException>(() => second = first.mapTo<Second>());
         }
 
-        [Fact(DisplayName = "Map to existing instance")]
-        public void map_to_existing_instance()
+        [Fact]
+        public void map_fails_to_existing_instance_because_of_missing_target_properties()
         {
             First first;
             Second second;

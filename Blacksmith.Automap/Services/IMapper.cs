@@ -1,4 +1,4 @@
-﻿namespace Blaxpro.Automap.Services
+﻿namespace Blacksmith.Automap.Services
 {
     public interface IMapper
     {

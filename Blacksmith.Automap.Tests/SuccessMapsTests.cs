@@ -1,9 +1,9 @@
-using Blaxpro.Automap.Extensions;
+using Blacksmith.Automap.Extensions;
 using Xunit;
 
-namespace Blaxpro.Automap.Tests
+namespace Blacksmith.Automap.Tests
 {
-    public class UnitTest2
+    public class SuccessMapsTests
     {
         public class First
         {
@@ -19,7 +19,7 @@ namespace Blaxpro.Automap.Tests
         }
 
         [Fact(DisplayName = "Map to new instance")]
-        public void map_to_new_instance()
+        public void map_to_new_instance_works_as_expected()
         {
             First first;
             Second second;
@@ -37,7 +37,7 @@ namespace Blaxpro.Automap.Tests
         }
 
         [Fact(DisplayName = "Map to existing instance")]
-        public void map_to_existing_instance()
+        public void map_to_existing_instance_works_as_expected()
         {
             First first;
             Second second;

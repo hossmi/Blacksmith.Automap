@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Version>2.1.3</Version>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <AssemblyVersion>2.1.3.0</AssemblyVersion>
+    <FileVersion>2.1.3.0</FileVersion>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/hossmi/Blacksmith.Automap</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hossmi/Blacksmith.Automap</RepositoryUrl>
+    <PackageTags>tools mapper</PackageTags>
+  </PropertyGroup>
+
+</Project>
