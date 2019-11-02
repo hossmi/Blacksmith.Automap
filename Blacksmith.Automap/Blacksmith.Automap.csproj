@@ -25,6 +25,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blacksmith.TypeExtensions" Version="1.0.1" />
     <PackageReference Include="Blacksmith.Validations" Version="1.2.5" />
   </ItemGroup>
 

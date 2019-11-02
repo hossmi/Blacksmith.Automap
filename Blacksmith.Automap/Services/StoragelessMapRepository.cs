@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Blacksmith.Automap.Exceptions;
 using Blacksmith.Automap.Models;
+using Blacksmith.Extensions.Types;
 
 namespace Blacksmith.Automap.Services
 {
@@ -123,7 +124,15 @@ namespace Blacksmith.Automap.Services
 
         private static IDictionary<string, IPropertyAccessor> getProperties(Type type)
         {
-            if(type.IsAssignableFrom()
+            if(type.extends<IDictionary<string,object>>())
+            {
+                throw new NotImplementedException();
+
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
