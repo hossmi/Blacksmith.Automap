@@ -4,7 +4,7 @@ namespace Blacksmith.Automap.Models
 {
     public class PropertyMap
     {
-        public PropertyInfo SourceProperty { get; set; }
-        public PropertyInfo TargetProperty { get; set; }
+        public IPropertyAccessor SourceProperty { get; set; }
+        public IPropertyAccessor TargetProperty { get; set; }
     }
 }

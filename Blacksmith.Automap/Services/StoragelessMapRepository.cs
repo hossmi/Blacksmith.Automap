@@ -121,5 +121,9 @@ namespace Blacksmith.Automap.Services
             }
         }
 
+        private static IDictionary<string, IPropertyAccessor> getProperties(Type type)
+        {
+            if(type.IsAssignableFrom()
+        }
     }
 }
