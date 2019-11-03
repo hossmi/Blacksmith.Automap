@@ -21,37 +21,34 @@ namespace Blacksmith.Automap.Services
         private static void prv_mapTo(object source, object target, IMapRepository mapRepository)
         {
             IMap map;
-            Type sourceType, targetType;
 
-            sourceType = source.GetType();
-            targetType = target.GetType();
-            map = mapRepository.getMap(sourceType, targetType);
+            map = mapRepository.getMap(source, target);
 
             foreach (PropertyMap propertyMap in map)
             {
                 object value;
                 bool needsRecursiveMap;
 
-                value = propertyMap.SourceProperty.GetValue(source);
+                value = propertyMap.SourceProperty.getValue(source);
                 needsRecursiveMap = prv_needsRecursiveMap(propertyMap);
 
                 if (needsRecursiveMap)
                 {
                     object childTarget;
 
-                    childTarget = Activator.CreateInstance(propertyMap.TargetProperty.PropertyType);
+                    childTarget = Activator.CreateInstance(propertyMap.TargetProperty.Type);
                     prv_mapTo(value, childTarget, mapRepository);
-                    propertyMap.TargetProperty.SetValue(target, childTarget);
+                    propertyMap.TargetProperty.setValue(target, childTarget);
                 }
                 else
                 {
                     try
                     {
-                        propertyMap.TargetProperty.SetValue(target, value);
+                        propertyMap.TargetProperty.setValue(target, value);
                     }
                     catch (ArgumentException ex)
                     {
-                        throw new MappingException(sourceType, targetType, "Error assigning property value", ex);
+                        throw new MappingException(source.GetType(), target.GetType(), "Error assigning property value", ex);
                     }
                 }
             }
@@ -62,10 +59,10 @@ namespace Blacksmith.Automap.Services
             bool sourceIsNoStringClass, targetIsNoStringClass, sourceIsCustomStruct, targetIsCustomStruct;
             bool sourceIsClassOrStruct, targetIsClassOrStruct;
 
-            sourceIsNoStringClass = prv_isNoStringClass(propertyMap.SourceProperty.PropertyType);
-            targetIsNoStringClass = prv_isNoStringClass(propertyMap.TargetProperty.PropertyType);
-            sourceIsCustomStruct = prv_isCustomStruct(propertyMap.SourceProperty.PropertyType);
-            targetIsCustomStruct = prv_isCustomStruct(propertyMap.TargetProperty.PropertyType);
+            sourceIsNoStringClass = prv_isNoStringClass(propertyMap.SourceProperty.Type);
+            targetIsNoStringClass = prv_isNoStringClass(propertyMap.TargetProperty.Type);
+            sourceIsCustomStruct = prv_isCustomStruct(propertyMap.SourceProperty.Type);
+            targetIsCustomStruct = prv_isCustomStruct(propertyMap.TargetProperty.Type);
             sourceIsClassOrStruct = sourceIsNoStringClass || sourceIsCustomStruct;
             targetIsClassOrStruct = targetIsNoStringClass || targetIsCustomStruct;
 

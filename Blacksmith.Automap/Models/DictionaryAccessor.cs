@@ -27,13 +27,16 @@ namespace Blacksmith.Automap.Models
             return new PropertyAccessorException(message);
         }
 
-        public Type PropertyType
+        public Type Type
         {
             get
             {
                 throw new NotImplementedException();
             }
         }
+
+        public string Name => throw new NotImplementedException();
+        public Type ObjectType => throw new NotImplementedException();
 
         public object getValue(object obj)
         {

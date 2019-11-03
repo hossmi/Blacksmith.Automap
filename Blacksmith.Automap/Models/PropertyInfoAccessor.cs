@@ -12,7 +12,11 @@ namespace Blacksmith.Automap.Models
             this.property = property;
         }
 
-        public Type PropertyType => this.property.PropertyType;
+        public Type Type => this.property.PropertyType;
+
+        public string Name => this.property.Name;
+
+        public Type ObjectType => this.property.DeclaringType;
 
         public object getValue(object obj)
         {

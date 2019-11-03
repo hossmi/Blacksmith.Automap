@@ -1,45 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Blacksmith.Automap.Exceptions;
 using Blacksmith.Automap.Models;
-using Blacksmith.Extensions.Types;
 
 namespace Blacksmith.Automap.Services
 {
     public class StoragelessMapRepository : IMapRepository
     {
-        public IMap getMap(Type sourceType, Type targetType)
+        private readonly IEnumerable<IPropertyScanner> propertyScanners;
+
+        public StoragelessMapRepository(IEnumerable<IPropertyScanner> propertyScanners)
+        {
+            this.propertyScanners = propertyScanners
+                .Concat(new[] { new PrvFailPropertyScanner() });
+        }
+
+        public IMap getMap(object source, object target)
         {
             IEnumerable<PropertyMap> propertyMaps;
 
-            propertyMaps = prv_getPropertyMaps(sourceType, targetType);
+            propertyMaps = prv_getPropertyMaps(this.propertyScanners, source, target);
 
             return new Map(propertyMaps);
         }
 
-        private static IEnumerable<PropertyMap> prv_getPropertyMaps(Type sourceType, Type targetType)
+        private static IEnumerable<PropertyMap> prv_getPropertyMaps(
+            IEnumerable<IPropertyScanner> propertyScanners, object source, object target)
         {
-            IDictionary<string, PropertyInfo> targetProperties, sourceProperties;
+            IEnumerable<IPropertyAccessor> sourceProperties;
+            IDictionary<string, IPropertyAccessor> targetProperties;
 
-            sourceProperties = sourceType
-                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Where(p => p.CanRead)
-                .ToDictionary(property => property.Name);
+            sourceProperties = propertyScanners
+                .First(o => o.canScan(source))
+                .getReadProperties(source)
+                .Values;
 
-            targetProperties = targetType
-                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Where(p => p.CanRead && p.CanWrite)
-                .ToDictionary(property => property.Name);
+            targetProperties = propertyScanners
+                .First(o => o.canScan(target))
+                .getWriteProperties(source);
 
-            foreach (var source in sourceProperties)
+            foreach (IPropertyAccessor sourceProperty in sourceProperties)
             {
-                PropertyInfo sourceProperty, targetProperty;
+                IPropertyAccessor targetProperty;
 
-                sourceProperty = source.Value;
-
-                if (prv_match(source.Value, targetProperties, out targetProperty))
+                if (prv_match(sourceProperty, targetProperties, out targetProperty))
                 {
                     yield return new PropertyMap
                     {
@@ -47,7 +52,7 @@ namespace Blacksmith.Automap.Services
                         TargetProperty = targetProperty,
                     };
                 }
-                else if (prv_ignoreCaseMatch(source.Value, targetProperties, out targetProperty))
+                else if (prv_ignoreCaseMatch(sourceProperty, targetProperties, out targetProperty))
                 {
                     yield return new PropertyMap
                     {
@@ -57,23 +62,22 @@ namespace Blacksmith.Automap.Services
                 }
                 else
                 {
-                    throw new MappingException(sourceType, targetType, $"Property '{source.Key}' not found at '{targetType.FullName}' type.");
+                    throw new MappingException(source.GetType(), target.GetType(), $"Property '{sourceProperty.Name}' not found at '{target.GetType().FullName}' type.");
                 }
             }
 
             if (targetProperties.Any())
-                throw new MappingException(sourceType, targetType, $"Some target properties of '{targetType.FullName}' could not be assigned.");
+                throw new MappingException(source.GetType(), target.GetType(), $"Some target properties of '{target.GetType().FullName}' could not be assigned.");
         }
 
-        private static bool prv_match(PropertyInfo sourceProperty, IDictionary<string, PropertyInfo> targetProperties, out PropertyInfo targetProperty)
+        private static bool prv_match(
+            IPropertyAccessor sourceProperty
+            , IDictionary<string, IPropertyAccessor> targetProperties
+            , out IPropertyAccessor targetProperty)
         {
             if (targetProperties.ContainsKey(sourceProperty.Name))
             {
-                Type sourceType, targetType;
-
-                sourceType = sourceProperty.DeclaringType;
                 targetProperty = targetProperties[sourceProperty.Name];
-                targetType = targetProperty.DeclaringType;
                 targetProperties.Remove(sourceProperty.Name);
                 return true;
             }
@@ -84,13 +88,16 @@ namespace Blacksmith.Automap.Services
             }
         }
 
-        private static bool prv_ignoreCaseMatch(PropertyInfo sourceProperty, IDictionary<string, PropertyInfo> targetProperties, out PropertyInfo targetProperty)
+        private static bool prv_ignoreCaseMatch(
+            IPropertyAccessor sourceProperty
+            , IDictionary<string, IPropertyAccessor> targetProperties
+            , out IPropertyAccessor targetProperty)
         {
             int matches;
             StringComparer stringComparer;
             Type sourceType;
 
-            sourceType = sourceProperty.DeclaringType;
+            sourceType = sourceProperty.ObjectType;
             stringComparer = StringComparer.InvariantCultureIgnoreCase;
             matches = 0;
             targetProperty = targetProperties
@@ -102,7 +109,7 @@ namespace Blacksmith.Automap.Services
                         matches++;
 
                         if (matches > 1)
-                            throw new MappingException(sourceType, property.DeclaringType, $"Multiple matches for '{sourceProperty.Name}' property.");
+                            throw new MappingException(sourceType, property.ObjectType, $"Multiple matches for '{sourceProperty.Name}' property.");
 
                         return true;
                     }
@@ -122,16 +129,21 @@ namespace Blacksmith.Automap.Services
             }
         }
 
-        private static IDictionary<string, IPropertyAccessor> getProperties(Type type)
+        private class PrvFailPropertyScanner : IPropertyScanner
         {
-            if(type.extends<IDictionary<string,object>>())
+            public bool canScan(object item)
             {
-                throw new NotImplementedException();
-
+                return true;
             }
-            else
+
+            public IDictionary<string, IPropertyAccessor> getReadProperties(object source)
             {
-                throw new NotImplementedException();
+                throw new PropertyScannerException(source.GetType(), $"No property scanner could read object of type '{source.GetType()}'.");
+            }
+
+            public IDictionary<string, IPropertyAccessor> getWriteProperties(object source)
+            {
+                throw new PropertyScannerException(source.GetType(), $"No property scanner could read object of type '{source.GetType()}'.");
             }
         }
     }

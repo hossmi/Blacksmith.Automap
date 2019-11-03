@@ -11,7 +11,7 @@ namespace Blacksmith.Automap.Extensions
 
         static AutomapExtensions()
         {
-            currentMapRepository = new StoragelessMapRepository();
+            currentMapRepository = new StoragelessMapRepository(new[] { new ObjectPropertyScanner() });
             currentMapper = new RecursiveMapper(currentMapRepository);
         }
 
