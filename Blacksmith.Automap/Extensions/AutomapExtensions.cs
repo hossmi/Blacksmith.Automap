@@ -45,6 +45,16 @@ namespace Blacksmith.Automap.Extensions
             return prv_map<T>(mapper, item, targetItem);
         }
 
+        public static TOut mapTo<TIn, TOut>(this TIn item, Func<TIn, TOut> newInstanceDelegate)
+        {
+            return prv_map(currentMapper, item, newInstanceDelegate(item));
+        }
+
+        public static TOut mapTo<TIn, TOut>(this TIn item, Func<TIn, TOut> newInstanceDelegate, IMapper mapper)
+        {
+            return prv_map(mapper, item, newInstanceDelegate(item));
+        }
+
         public static IEnumerable<T> map<T>(this IEnumerable<object> items) where T : new()
         {
             foreach (object item in items)
