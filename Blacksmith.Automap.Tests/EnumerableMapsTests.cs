@@ -70,5 +70,18 @@ namespace Blacksmith.Automap.Tests
             Assert.Equal(4, target.Count);
             Assert.Equal(55, target[3].CouNT);
         }
+
+        [Fact(DisplayName = "Map enumerble")]
+        public void map_with_parametrized_constructor()
+        {
+            Source source;
+            ParametrizedConstructorTarget target;
+
+            source = new Source { count = 13 };
+
+            target = source.mapTo(i => new ParametrizedConstructorTarget(i.count));
+
+            Assert.Equal(13, target.CouNT);
+        }
     }
 }
