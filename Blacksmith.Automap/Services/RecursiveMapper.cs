@@ -79,7 +79,10 @@ namespace Blacksmith.Automap.Services
 
         private static bool prv_isCustomStruct(Type type)
         {
-            return type.IsValueType && !type.IsEnum && !type.IsPrimitive;
+            return type.IsValueType 
+                && !type.IsEnum 
+                && !type.IsPrimitive
+                && !type.Name.StartsWith("Nullable");
         }
     }
 }
