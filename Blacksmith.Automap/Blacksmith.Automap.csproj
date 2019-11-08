@@ -3,18 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.2.0</Version>
+    <Version>2.2.1</Version>
     <SignAssembly>false</SignAssembly>
     <Description>Yet another tool for make object to object copies</Description>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
-    <FileVersion>2.2.0.0</FileVersion>
+    <AssemblyVersion>2.2.1.0</AssemblyVersion>
+    <FileVersion>2.2.1.0</FileVersion>
     <PackageProjectUrl>https://github.com/hossmi/Blacksmith.Automap</PackageProjectUrl>
     <RepositoryUrl>https://github.com/hossmi/Blacksmith.Automap</RepositoryUrl>
     <PackageTags>tools mapper</PackageTags>
     <Authors>hossmi</Authors>
+    <PackageReleaseNotes>Fix nullable mapping</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
