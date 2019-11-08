@@ -15,6 +15,7 @@ namespace Blacksmith.Automap.Tests
             public int? Id { get; set; }
         }
 
+        [Fact]
         public void map_to_new_instance_works_as_expected()
         {
             UserData source, target;
