@@ -1,4 +1,6 @@
 using Blacksmith.Automap.Extensions;
+using Blacksmith.Automap.Tests.Models.Data;
+using Blacksmith.Automap.Tests.Models.Domain;
 using Xunit;
 
 namespace Blacksmith.Automap.Tests
@@ -46,6 +48,20 @@ namespace Blacksmith.Automap.Tests
 
             Assert.Equal(34.0, target.Count);
             Assert.Equal(89L, target.child.Someproperty);
+        }
+
+        [Fact]
+        public void missing_target_properties_test()
+        {
+            Tag tag;
+            TagData data;
+
+            tag = new Tag("pepe");
+
+            data = tag.mapTo<TagData>();
+
+            Assert.Equal("pepe", data.Name);
+            Assert.Null(data.Id);
         }
 
     }

@@ -1,11 +1,14 @@
 using Blacksmith.Automap.Exceptions;
 using Blacksmith.Automap.Extensions;
+using Blacksmith.Automap.Services;
 using Xunit;
 
 namespace Blacksmith.Automap.Tests
 {
     public class MissingTargetPropertiesTests
     {
+        private readonly IMapper mapper;
+
         public class First
         {
             public static string SomeStaticStringProperty { get; set; }
@@ -22,6 +25,11 @@ namespace Blacksmith.Automap.Tests
             public decimal? DoubleNullableProperty { get; set; }
         }
 
+        public MissingTargetPropertiesTests()
+        {
+            this.mapper = new RecursiveMapper(new StoragelessMapRepository(new StrictMapBuilder()));
+        }
+
         [Fact]
         public void map_fails_to_new_instance_because_of_missing_target_properties()
         {
@@ -34,7 +42,9 @@ namespace Blacksmith.Automap.Tests
                 StringProperty = "Some string",
             };
 
-            Assert.Throws<MappingException>(() => second = first.mapTo<Second>());
+            
+
+            Assert.Throws<MappingException>(() => second = first.mapTo<Second>(this.mapper));
         }
 
         [Fact]
@@ -57,7 +67,7 @@ namespace Blacksmith.Automap.Tests
                 DoubleNullableProperty = 3.1415m
             };
 
-            Assert.Throws<MappingException>(() => first.mapTo(second));
+            Assert.Throws<MappingException>(() => first.mapTo(second, this.mapper));
 
         }
     }
