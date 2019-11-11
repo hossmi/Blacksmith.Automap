@@ -7,13 +7,12 @@ namespace Blacksmith.Automap.Tests
 {
     public class MissingTargetPropertiesTests
     {
-        private readonly IMapper mapper;
-
         public class First
         {
             public static string SomeStaticStringProperty { get; set; }
             public int IntProperty { get; set; }
             public string StringProperty { get; set; }
+            public decimal Amount { get; set; }
         }
 
         public class Second
@@ -23,11 +22,7 @@ namespace Blacksmith.Automap.Tests
             public string StringProperty { get; set; }
             public string Stringproperty { get; set; }
             public decimal? DoubleNullableProperty { get; set; }
-        }
-
-        public MissingTargetPropertiesTests()
-        {
-            this.mapper = new RecursiveMapper(new StoragelessMapRepository(new StrictMapBuilder()));
+            public decimal Amount { get; set; }
         }
 
         [Fact]
@@ -35,6 +30,9 @@ namespace Blacksmith.Automap.Tests
         {
             First first;
             Second second;
+            IMapper mapper;
+
+            mapper = new RecursiveMapper(new StoragelessMapRepository(new StrictMapBuilder()));
 
             first = new First
             {
@@ -42,9 +40,7 @@ namespace Blacksmith.Automap.Tests
                 StringProperty = "Some string",
             };
 
-            
-
-            Assert.Throws<MappingException>(() => second = first.mapTo<Second>(this.mapper));
+            Assert.Throws<UnpairedMappingException>(() => second = first.mapTo<Second>(mapper));
         }
 
         [Fact]
@@ -52,6 +48,9 @@ namespace Blacksmith.Automap.Tests
         {
             First first;
             Second second;
+            IMapper mapper;
+
+            mapper = new RecursiveMapper(new StoragelessMapRepository(new StrictMapBuilder()));
 
             first = new First
             {
@@ -67,8 +66,42 @@ namespace Blacksmith.Automap.Tests
                 DoubleNullableProperty = 3.1415m
             };
 
-            Assert.Throws<MappingException>(() => first.mapTo(second, this.mapper));
+            Assert.Throws<UnpairedMappingException>(() => first.mapTo(second, mapper));
 
+        }
+
+        [Fact]
+        public void loose_map_tests()
+        {
+            IMapper mapper;
+            First first;
+            Second second;
+
+            mapper = new RecursiveMapper(new StoragelessMapRepository(new SourceCopyMapBuilder()));
+
+            first = new First
+            {
+                IntProperty = 34,
+                StringProperty = "Some string",
+            };
+
+            second = new Second
+            {
+                Intproperty = 666,
+                StringProperty = "aaa",
+                Stringproperty = "untouched",
+                DoubleNullableProperty = 3.1415m,
+                Amount = 89.34m,
+            };
+
+            Assert.Throws<UnpairedMappingException>(() => second.mapTo(first, mapper));
+
+            mapper.Repository.MapBuilder = new LooseMapBuilder();
+            second.mapTo(first, mapper);
+
+            Assert.Equal(666, first.IntProperty);
+            Assert.Equal("aaa", first.StringProperty);
+            Assert.Equal(89.34m, first.Amount);
         }
     }
 }
