@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Blacksmith.Automap.Exceptions;
 using Blacksmith.Automap.Models;
 using Blacksmith.Validations;
@@ -73,30 +74,19 @@ namespace Blacksmith.Automap.Services
 
         private static bool prv_needsRecursiveMap(PropertyMap propertyMap)
         {
-            bool sourceIsNoStringClass, targetIsNoStringClass, sourceIsCustomStruct, targetIsCustomStruct;
-            bool sourceIsClassOrStruct, targetIsClassOrStruct;
+            bool sourceHasReadWriteProperties, targetHasReadWriteProperties;
 
-            sourceIsNoStringClass = prv_isNoStringClass(propertyMap.SourceProperty.PropertyType);
-            targetIsNoStringClass = prv_isNoStringClass(propertyMap.TargetProperty.PropertyType);
-            sourceIsCustomStruct = prv_isCustomStruct(propertyMap.SourceProperty.PropertyType);
-            targetIsCustomStruct = prv_isCustomStruct(propertyMap.TargetProperty.PropertyType);
-            sourceIsClassOrStruct = sourceIsNoStringClass || sourceIsCustomStruct;
-            targetIsClassOrStruct = targetIsNoStringClass || targetIsCustomStruct;
+            sourceHasReadWriteProperties = propertyMap.SourceProperty
+                .PropertyType
+                .GetProperties()
+                .Any(p => p.CanRead && p.CanWrite);
 
-            return sourceIsClassOrStruct && targetIsClassOrStruct;
-        }
+            targetHasReadWriteProperties = propertyMap.TargetProperty
+                .PropertyType
+                .GetProperties()
+                .Any(p => p.CanRead && p.CanWrite);
 
-        private static bool prv_isNoStringClass(Type type)
-        {
-            return type.IsClass && type != typeof(string);
-        }
-
-        private static bool prv_isCustomStruct(Type type)
-        {
-            return type.IsValueType
-                && !type.IsEnum
-                && !type.IsPrimitive
-                && !type.Name.StartsWith("Nullable");
+            return sourceHasReadWriteProperties && targetHasReadWriteProperties;
         }
     }
 }
