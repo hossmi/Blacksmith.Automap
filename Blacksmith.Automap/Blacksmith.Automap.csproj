@@ -26,4 +26,8 @@
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Blacksmith.Validations" Version="2.0.0" />
+  </ItemGroup>
+
 </Project>

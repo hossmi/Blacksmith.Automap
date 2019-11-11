@@ -6,5 +6,6 @@ namespace Blacksmith.Automap.Services
     public interface IMapRepository
     {
         IMap getMap(Type sourceType, Type targetType);
+        IMapBuilder MapBuilder { get; set; }
     }
 }

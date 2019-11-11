@@ -1,28 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blacksmith.Automap.Services;
+using Blacksmith.Validations;
 
 namespace Blacksmith.Automap.Extensions
 {
     public static class AutomapExtensions
     {
-        private static IMapRepository currentMapRepository;
+        private static readonly IValidator assert;
         private static IMapper currentMapper;
 
         static AutomapExtensions()
         {
-            currentMapRepository = new StoragelessMapRepository();
-            currentMapper = new RecursiveMapper(currentMapRepository);
+            assert = Asserts.Default;
+
+            currentMapper = new RecursiveMapper(
+                new StoragelessMapRepository(
+                    new SourceCopyMapBuilder()
+                    )
+                );
         }
 
+        [Obsolete]
         public static void setAsDefault(this IMapper mapper)
         {
-            currentMapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            Mapper = mapper;
         }
 
+        [Obsolete]
         public static void setAsDefault(this IMapRepository mapRepository)
         {
-            currentMapRepository = mapRepository ?? throw new ArgumentNullException(nameof(mapRepository));
+            currentMapper.Repository = mapRepository;
+        }
+
+        public static IMapper Mapper
+        {
+            get => currentMapper;
+            set
+            {
+                assert.isNotNull(value);
+                currentMapper = value;
+            }
+        }
+
+        public static IMapRepository MapRepository
+        {
+            get => currentMapper.Repository;
+            set
+            {
+                currentMapper.Repository = value;
+            }
+        }
+
+        public static IMapBuilder MapBuilder
+        {
+            get => currentMapper.Repository.MapBuilder;
+            set
+            {
+                currentMapper.Repository.MapBuilder = value;
+            }
         }
 
         public static T mapTo<T>(this object item) where T : new()
@@ -30,7 +66,7 @@ namespace Blacksmith.Automap.Extensions
             return prv_map<T>(currentMapper, item, new T());
         }
 
-        public static T mapTo<T>(this object item, T targetItem) 
+        public static T mapTo<T>(this object item, T targetItem)
         {
             return prv_map<T>(currentMapper, item, targetItem);
         }
@@ -40,7 +76,7 @@ namespace Blacksmith.Automap.Extensions
             return prv_map<T>(mapper, item, new T());
         }
 
-        public static T mapTo<T>(this object item, T targetItem, IMapper mapper) 
+        public static T mapTo<T>(this object item, T targetItem, IMapper mapper)
         {
             return prv_map<T>(mapper, item, targetItem);
         }
@@ -61,7 +97,7 @@ namespace Blacksmith.Automap.Extensions
                 yield return prv_map<T>(currentMapper, item, new T());
         }
 
-        public static IEnumerable<T> map<S, T>(this IEnumerable<S> items, Func<S, T> newInstanceDelegate) 
+        public static IEnumerable<T> map<S, T>(this IEnumerable<S> items, Func<S, T> newInstanceDelegate)
         {
             foreach (S item in items)
                 yield return prv_map(currentMapper, item, newInstanceDelegate(item));
@@ -85,7 +121,7 @@ namespace Blacksmith.Automap.Extensions
             return target;
         }
 
-        private static T prv_map<S,T>(IMapper mapper, S source, T target)
+        private static T prv_map<S, T>(IMapper mapper, S source, T target)
         {
             mapper.map(source, target);
             return target;

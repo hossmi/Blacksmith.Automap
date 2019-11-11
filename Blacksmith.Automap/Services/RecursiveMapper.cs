@@ -1,16 +1,30 @@
 ﻿using System;
 using Blacksmith.Automap.Exceptions;
 using Blacksmith.Automap.Models;
+using Blacksmith.Validations;
 
 namespace Blacksmith.Automap.Services
 {
     public class RecursiveMapper : IMapper
     {
-        private readonly IMapRepository mapRepository;
+        private readonly IValidator assert;
+        private IMapRepository mapRepository;
+
 
         public RecursiveMapper(IMapRepository mapRepository)
         {
-            this.mapRepository = mapRepository ?? throw new ArgumentNullException(nameof(mapRepository));
+            this.assert = Asserts.Default;
+            this.Repository = mapRepository;
+        }
+
+        public IMapRepository Repository
+        {
+            get => this.mapRepository;
+            set
+            {
+                this.assert.isNotNull(value);
+                this.mapRepository = value;
+            }
         }
 
         public void map(object source, object target)
@@ -79,8 +93,8 @@ namespace Blacksmith.Automap.Services
 
         private static bool prv_isCustomStruct(Type type)
         {
-            return type.IsValueType 
-                && !type.IsEnum 
+            return type.IsValueType
+                && !type.IsEnum
                 && !type.IsPrimitive
                 && !type.Name.StartsWith("Nullable");
         }
