@@ -8,12 +8,19 @@ namespace Blacksmith.Automap.Services
 {
     public class StrictMapBuilder : AbstractMapBuilder
     {
-        protected override void processUnassignedTargetProperties(Type sourceType, Type targetType, IDictionary<string, PropertyInfo> targetProperties)
+        protected override void processUnpairedTargetProperties(Type sourceType, Type targetType, IEnumerable<PropertyInfo> targetProperties)
         {
             if (targetProperties.Any())
             {
-                throw new MappingException(sourceType, targetType, $"Some target properties of '{targetType.FullName}' could not be assigned.");
+                throw new UnpairedMappingException(sourceType, targetType, targetProperties
+                    , $"Some target properties of '{targetType.FullName}' could not be assigned.");
             }
+        }
+
+        protected override void processUnpairedSourceProperty(Type sourceType, Type targetType, PropertyInfo property)
+        {
+            throw new UnpairedMappingException(sourceType, targetType, new[] { property }
+                , $"Property '{property.Name}' not found at '{targetType.FullName}' type.");
         }
     }
 }

@@ -47,14 +47,15 @@ namespace Blacksmith.Automap.Services
                 }
                 else
                 {
-                    throw new MappingException(sourceType, targetType, $"Property '{source.Key}' not found at '{targetType.FullName}' type.");
+                    processUnpairedSourceProperty(sourceType, targetType, source.Value);
                 }
             }
 
-            processUnassignedTargetProperties(sourceType, targetType, targetProperties);
+            processUnpairedTargetProperties(sourceType, targetType, targetProperties.Values);
         }
 
-        protected abstract void processUnassignedTargetProperties(Type sourceType, Type targetType, IDictionary<string, PropertyInfo> targetProperties);
+        protected abstract void processUnpairedSourceProperty(Type sourceType, Type targetType, PropertyInfo property);
+        protected abstract void processUnpairedTargetProperties(Type sourceType, Type targetType, IEnumerable<PropertyInfo> targetProperties);
 
         private static bool prv_match(PropertyInfo sourceProperty, IDictionary<string, PropertyInfo> targetProperties, out PropertyInfo targetProperty)
         {
