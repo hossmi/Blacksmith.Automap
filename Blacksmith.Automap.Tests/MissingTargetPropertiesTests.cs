@@ -1,6 +1,9 @@
 using Blacksmith.Automap.Exceptions;
 using Blacksmith.Automap.Extensions;
 using Blacksmith.Automap.Services;
+using Blacksmith.Automap.Services.MapBuilders;
+using Blacksmith.Automap.Services.Mappers;
+using Blacksmith.Automap.Services.MapRepositories;
 using Xunit;
 
 namespace Blacksmith.Automap.Tests

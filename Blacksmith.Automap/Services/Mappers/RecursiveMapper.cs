@@ -4,7 +4,7 @@ using Blacksmith.Automap.Exceptions;
 using Blacksmith.Automap.Models;
 using Blacksmith.Validations;
 
-namespace Blacksmith.Automap.Services
+namespace Blacksmith.Automap.Services.Mappers
 {
     public class RecursiveMapper : IMapper
     {

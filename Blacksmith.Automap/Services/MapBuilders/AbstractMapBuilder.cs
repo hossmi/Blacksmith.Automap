@@ -5,7 +5,7 @@ using System.Reflection;
 using Blacksmith.Automap.Exceptions;
 using Blacksmith.Automap.Models;
 
-namespace Blacksmith.Automap.Services
+namespace Blacksmith.Automap.Services.MapBuilders
 {
     public abstract class AbstractMapBuilder : IMapBuilder
     {

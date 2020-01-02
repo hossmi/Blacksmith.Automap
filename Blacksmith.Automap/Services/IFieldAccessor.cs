@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Blacksmith.Automap.Services.FieldAccessors
+namespace Blacksmith.Automap.Services
 {
     public interface IReadOnlyFieldAccessor
     {

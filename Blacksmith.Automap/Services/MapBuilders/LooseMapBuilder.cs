@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Blacksmith.Automap.Services
+namespace Blacksmith.Automap.Services.MapBuilders
 {
     public class LooseMapBuilder : AbstractMapBuilder
     {

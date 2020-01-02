@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blacksmith.Automap.Services;
+using Blacksmith.Automap.Services.MapBuilders;
+using Blacksmith.Automap.Services.Mappers;
+using Blacksmith.Automap.Services.MapRepositories;
 using Blacksmith.Validations;
 
 namespace Blacksmith.Automap.Extensions

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Blacksmith.Automap.Exceptions;
 
-namespace Blacksmith.Automap.Services
+namespace Blacksmith.Automap.Services.MapBuilders
 {
     public class StrictMapBuilder : AbstractMapBuilder
     {

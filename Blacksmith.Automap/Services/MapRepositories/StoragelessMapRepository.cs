@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Blacksmith.Automap.Models;
 using Blacksmith.Validations;
 
-namespace Blacksmith.Automap.Services
+namespace Blacksmith.Automap.Services.MapRepositories
 {
     public class StoragelessMapRepository : IMapRepository
     {
