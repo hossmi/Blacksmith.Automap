@@ -6,8 +6,10 @@ namespace Blacksmith.Automap.Services
     {
         IEnumerable<string> Fields { get; }
         object this[string name] { get; }
-
+        //TField get<TField>(string name);
+        //TField get<TField>(string name, TField defaultValue);
     }
+
     public interface IReadOnlyFieldAccessor<T> : IReadOnlyFieldAccessor
         where T : class
     {
@@ -17,7 +19,9 @@ namespace Blacksmith.Automap.Services
     public interface IFieldAccessor : IReadOnlyFieldAccessor
     {
         new object this[string name] { get; set; }
+        //TField set<TField>(string name, TField value);
     }
+
     public interface IFieldAccessor<T> : IFieldAccessor, IReadOnlyFieldAccessor<T>
         where T : class
     {
