@@ -2,7 +2,7 @@
 
 namespace Blacksmith.Automap.Services
 {
-    public interface IReadOnlyFieldAccessor
+    public interface IReadOnlyFieldAccessor : IEnumerable<KeyValuePair<string, object>>
     {
         IEnumerable<string> Fields { get; }
         object this[string name] { get; }
@@ -11,7 +11,6 @@ namespace Blacksmith.Automap.Services
     }
 
     public interface IReadOnlyFieldAccessor<T> : IReadOnlyFieldAccessor
-        where T : class
     {
         T Instance { get; }
     }
@@ -23,7 +22,6 @@ namespace Blacksmith.Automap.Services
     }
 
     public interface IFieldAccessor<T> : IFieldAccessor, IReadOnlyFieldAccessor<T>
-        where T : class
     {
     }
 }

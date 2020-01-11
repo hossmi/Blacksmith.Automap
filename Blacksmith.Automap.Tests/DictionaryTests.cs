@@ -27,8 +27,8 @@ namespace Blacksmith.Automap.Tests
             IDictionary<string, object> dictionary;
 
             dictionary = row
-                .access()
-                .asDictionary();
+                .convert()
+                .toDictionary();
 
             dictionary.Should().NotBeNull();
             dictionary.Count.Should().Be(6);
@@ -126,9 +126,5 @@ namespace Blacksmith.Automap.Tests
             };
         }
 
-        //private class PrvFakeDataReader : IDataReader
-        //{
-
-        //}
     }
 }

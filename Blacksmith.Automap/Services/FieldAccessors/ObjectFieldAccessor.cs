@@ -4,11 +4,11 @@ using System.Reflection;
 
 namespace Blacksmith.Automap.Services.FieldAccessors
 {
-    public class ObjectFieldAccessor : IFieldAccessor<object>
+    public class ObjectFieldAccessor<T> : IFieldAccessor<T>
     {
         private readonly IDictionary<string, PropertyInfo> propertyMap;
 
-        public ObjectFieldAccessor(object instance)
+        public ObjectFieldAccessor(T instance)
         {
             this.Instance = instance;
             this.Fields = instance
@@ -29,7 +29,7 @@ namespace Blacksmith.Automap.Services.FieldAccessors
             set => this.propertyMap[name].SetValue(this.Instance, value);
         }
 
-        public object Instance { get; }
+        public T Instance { get; }
 
         public IEnumerable<string> Fields { get; }
 
