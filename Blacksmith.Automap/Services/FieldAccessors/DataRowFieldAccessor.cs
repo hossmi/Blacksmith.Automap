@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Blacksmith.Automap.Services.FieldAccessors
@@ -22,9 +23,34 @@ namespace Blacksmith.Automap.Services.FieldAccessors
         {
             get
             {
-                foreach (DataColumn column in this.Instance.Table.Columns)
-                    yield return column.ColumnName;
+                return prv_getFields(this.Instance);
             }
+        }
+
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        {
+            return prv_getEnumerator(this.Instance);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return prv_getEnumerator(this.Instance);
+        }
+
+        private static IEnumerable<string> prv_getFields(DataRow instance)
+        {
+            foreach (DataColumn column in instance.Table.Columns)
+                yield return column.ColumnName;
+        }
+
+        private static IEnumerator<KeyValuePair<string, object>> prv_getEnumerator(DataRow instance)
+        {
+            IEnumerable<string> fields;
+
+            fields = prv_getFields(instance);
+
+            foreach (string field in fields)
+                yield return new KeyValuePair<string, object>(field, instance[field]);
         }
     }
 }

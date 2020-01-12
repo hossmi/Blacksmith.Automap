@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Blacksmith.Automap.Services.FieldAccessors
 {
@@ -19,5 +20,15 @@ namespace Blacksmith.Automap.Services.FieldAccessors
         public IEnumerable<string> Fields => this.Instance.Keys;
 
         public IDictionary<string, object> Instance { get; }
+
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        {
+            return this.Instance.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.Instance.GetEnumerator();
+        }
     }
 }

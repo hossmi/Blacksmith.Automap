@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -33,5 +34,27 @@ namespace Blacksmith.Automap.Services.FieldAccessors
 
         public IEnumerable<string> Fields { get; }
 
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        {
+            return prv_getEnumerator(this.Instance, this.propertyMap);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return prv_getEnumerator(this.Instance, this.propertyMap);
+        }
+
+        private static IEnumerator<KeyValuePair<string, object>> prv_getEnumerator(
+            T instance, IDictionary<string, PropertyInfo> propertyMap)
+        {
+            foreach (KeyValuePair<string, PropertyInfo> property in propertyMap)
+            {
+                object value;
+
+                value = property.Value.GetValue(instance);
+
+                yield return new KeyValuePair<string, object>(property.Key, value);
+            }
+        }
     }
 }

@@ -31,22 +31,45 @@ namespace Blacksmith.Automap.Extensions.FieldAccessors
 
         public static IDictionary<string, object> toDictionary(this IReadOnlyFieldAccessor accessor)
         {
-            throw new NotImplementedException();
+            return accessor.ToDictionary(item => item.Key, item => item.Value);
         }
 
-        public static IDictionary<string, object> toDataRow(this IReadOnlyFieldAccessor accessor, Func<DataRow> newRowDelegate)
+        public static DataRow toDataRow(this IReadOnlyFieldAccessor accessor, Func<DataRow> getNewRow)
         {
-            throw new NotImplementedException();
+            DataRow row;
+
+            row = getNewRow();
+
+            foreach (var item in accessor)
+                row[item.Key] = item.Value;
+
+            return row;
         }
 
         public static T to<T>(this IReadOnlyFieldAccessor accessor) where T : new()
         {
-            throw new NotImplementedException();
+            IFieldAccessor<T> resultAccessor;
+
+            resultAccessor = new ObjectFieldAccessor<T>(new T());
+
+            foreach (var item in accessor)
+                resultAccessor[item.Key] = item.Value;
+
+            return resultAccessor.Instance;
         }
 
-        public static T to<T>(this IReadOnlyFieldAccessor accessor, Func<IReadOnlyFieldAccessor<T>, T> build) where T : new()
+        public static T to<T>(this IReadOnlyFieldAccessor accessor, Func<IReadOnlyFieldAccessor, T> build)
         {
-            throw new NotImplementedException();
+            T instance;
+            IFieldAccessor<T> resultAccessor;
+
+            instance = build(accessor);
+            resultAccessor = new ObjectFieldAccessor<T>(instance);
+
+            foreach (var item in accessor)
+                resultAccessor[item.Key] = item.Value;
+
+            return instance;
         }
     }
 }
